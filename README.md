@@ -104,7 +104,6 @@ Workflow находится в `.github/workflows/main.yml` и дублируе�
 
 - `ruff format --check backend/`
 - `ruff check backend/`
-- `pycodestyle backend/`
 
 Также добавлен pre-commit-конфиг для запуска этих проверок перед коммитом.
 
