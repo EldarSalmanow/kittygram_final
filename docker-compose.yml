@@ -3,6 +3,7 @@ version: '3'
 volumes:
   pg_data:
   static:
+  media:
 
 services:
   db:
@@ -13,8 +14,15 @@ services:
   backend:
     build: ./backend/
     env_file: .env
+    command: >
+      sh -c "python manage.py migrate &&
+      python manage.py collectstatic --noinput &&
+      gunicorn kittygram_backend.wsgi:application --bind 0.0.0.0:8000"
     depends_on:
       - db
+    volumes:
+      - static:/app/static
+      - media:/app/media
   frontend:
     env_file: .env
     build: ./frontend/
@@ -24,7 +32,10 @@ services:
   gateway:
     build: ./nginx/
     env_file: .env
+    depends_on:
+      - backend
     ports:
       - 9000:80
     volumes:
       - static:/static
+      - media:/media
